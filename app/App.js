@@ -1,23 +1,75 @@
-import React from 'react';
-import { MapView } from 'expo';
+import React, { Component } from 'react';
+import { MapView, Location, Permissions } from 'expo';
+import { View, Button, TouchableOpacity, StyleSheet, AppRegistry, Text, Image } from 'react-native';
 
-export default class App extends React.Component {
+export default class App extends Component {    
+    
+    constructor(props) {
+	super(props);
+	this.onRegionChangeComplete = this.onRegionChangeComplete.bind(this);
+	this._getLocationAsync = this._getLocationAsync.bind(this);
+	this.state = {
+	    region: {latitude: 37.78825,
+		     longitude: -122.4324,
+		     latitudeDelta: 0.0922,
+		     longitudeDelta: 0.0421},
+	    locationResult: null,
+	    location: {coords: { latitude: 37.78825, longitude: -122.4324 }},
+	};
+    }
+
+    onRegionChangeComplete(region) {
+	this.setState({ region });
+	console.log("Changed region to: ",region); 
+    }
+
+    async _getLocationAsync () {
+//	const { Permissions } = Expo;
+	let { status } = await Permissions.askAsync(Permissions.LOCATION);
+	if (status !== 'granted') {
+	    alert("Enable location!");
+	}
+	let location = await  Location.getCurrentPositionAsync({});
+	console.log(location);
+	let region = {};
+	region.latitude = location.coords.latitude;
+	region.longitude = location.coords.longitude;
+	region.latitudeDelta = this.state.region.latitudeDelta;
+	region.longitudeDelta = this.state.region.longitudeDelta;
+	this.setState({ region });
+    }; 
+
+    
     render() {
 	return (
-            <MapView
-                style = {{ flex: 1 }}
-                provider = { MapView.PROVIDER_GOOGLE }
-                initialRegion={{
-                    latitude: 37.78825,
-                    longitude: -122.4324,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                }}
-                customMapStyle = { generatedMapStyle }
-            />
+	    <View style = {{ flex: 1 }}>
+                <MapView
+                    style = {{ flex: 1 }}
+                    provider = { MapView.PROVIDER_GOOGLE }
+                    region={ this.state.region }
+                    onRegionChangeComplete={ this.onRegionChangeComplete }
+                    customMapStyle = { generatedMapStyle }
+	        />
+                <TouchableOpacity
+                    underlayColor='red'
+                    style={{ alignItems: 'center', padding: 2}} 
+                    onPress={this._getLocationAsync}                 
+                >
+                    <Image
+                        style={{ width: 50, height: 50}}
+                        source={require('./assets/location.png')}
+                    />
+                </TouchableOpacity>
+	    </View>
+
 	);
     }
 } 
+
+let region = {latitude: 37.78825,
+	      longitude: -122.4324,
+	      latitudeDelta: 0.0922,
+	      longitudeDelta: 0.0421};
 
 
 const generatedMapStyle = [
