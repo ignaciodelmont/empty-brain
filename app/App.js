@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { MapView, Location, Permissions } from 'expo';
 import { View, Button, TouchableOpacity, StyleSheet, AppRegistry, Text, Image } from 'react-native';
+import { SearchBar } from 'react-native-elements';
 import { Marker } from 'react-native-maps';
 
 export default class App extends Component {    
@@ -9,6 +10,7 @@ export default class App extends Component {
 	super(props);
 	this.onRegionChangeComplete = this.onRegionChangeComplete.bind(this);
 	this._getLocationAsync = this._getLocationAsync.bind(this);
+	this.onChangeText = this.onChangeText.bind(this);
 	this.state = {
 	    region: {latitude: 37.78825,
 		     longitude: -122.4324,
@@ -16,14 +18,21 @@ export default class App extends Component {
 		     longitudeDelta: 0.0421},
 	    locationResult: null,
 	    location: {coords: { latitude: 37.78825, longitude: -122.4324 }},
-	    userLocation: null
-	};
+	    userLocation: null,
+	    search:''
+	}; 
     }
 
+    onChangeText(search) {
+	this.setState({ search });
+//	clearTimeout(this.timeout); // clears old timer
+//	this.timeout = setTimeout(() => this.search(this.search), WAIT_TIME);
+    }
     onRegionChangeComplete(region) {
 	this.setState({ region });
 	console.log("Changed region to: ",region); 
     }
+
 
     async _getLocationAsync () {
 //	const { Permissions } = Expo;
@@ -48,32 +57,53 @@ export default class App extends Component {
  
     
     render() {
-	return (
+	return (	    
 	    <View style = {{ flex: 1 }}>
+
                 <MapView
                     style = {{ flex: 1 }}
                     provider = { MapView.PROVIDER_GOOGLE }
                     region={ this.state.region }
                     onRegionChangeComplete={ this.onRegionChangeComplete }
-                    customMapStyle = { generatedMapStyle }
-	        >
+                    customMapStyle = { generatedMapStyle } >
+                    
                     {this.state.userLocation && <MapView.Marker
                         coordinate={this.state.userLocation.latlng}
                         title={this.state.userLocation.title}
                         description={this.state.userLocation.description}
-                    />}
+                     />}
+                    
 		</MapView>
+
+
+                <View style={{
+                          position: 'absolute',
+                          top: '3%',
+                          alignSelf: 'center',
+                          width: '95%',
+                          backgroundColor: 'transparent'                          
+                }}>
+                    <SearchBar
+                        round
+                        style={{backgroundColor: 'red'}}
+                        placeholder="Search tags"
+                        onChangeText={ this.onChangeText }
+                        value = {this.state.search}
+                    />
+                </View>
+
 
                 <View style={{
                           position: 'absolute',
                           top: '70%',
                           marginRight: '4%',
-                          alignSelf: 'flex-end',
-                }}>
-                    <TouchableOpacity onPress={this._getLocationAsync}
-                ><Image style={{height: 48, width: 50}} source={require('./assets/add.png')}/></TouchableOpacity>
+                          alignSelf: 'flex-end',}}>
+                    
+                    <TouchableOpacity onPress={this._getLocationAsync}>
+                        <Image style={{height: 48, width: 50}} source={require('./assets/add.png')}/></TouchableOpacity>
                 </View>
 
+                
                 <View style={{
                           position: 'absolute',
                           top: '80%',
