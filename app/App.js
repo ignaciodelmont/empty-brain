@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { MapView, Location, Permissions } from 'expo';
 import { View, Button, TouchableOpacity, StyleSheet, AppRegistry, Text, Image } from 'react-native';
+import { Marker } from 'react-native-maps';
 
 export default class App extends Component {    
     
@@ -15,6 +16,7 @@ export default class App extends Component {
 		     longitudeDelta: 0.0421},
 	    locationResult: null,
 	    location: {coords: { latitude: 37.78825, longitude: -122.4324 }},
+	    userLocation: null
 	};
     }
 
@@ -37,8 +39,13 @@ export default class App extends Component {
 	region.latitudeDelta = this.state.region.latitudeDelta;
 	region.longitudeDelta = this.state.region.longitudeDelta;
 	this.setState({ region });
+	let userLocation = {};
+	userLocation.title = "Location"; 
+	userLocation.description = "userLocation";
+	userLocation.latlng = {latitude:region.latitude , longitude:region.longitude };
+	this.setState({ userLocation });
     }; 
-
+ 
     
     render() {
 	return (
@@ -49,7 +56,13 @@ export default class App extends Component {
                     region={ this.state.region }
                     onRegionChangeComplete={ this.onRegionChangeComplete }
                     customMapStyle = { generatedMapStyle }
-	        />
+	        >
+                    {this.state.userLocation && <MapView.Marker
+                        coordinate={this.state.userLocation.latlng}
+                        title={this.state.userLocation.title}
+                        description={this.state.userLocation.description}
+                    />}
+		</MapView>
 
                 <View style={{
                           position: 'absolute',
