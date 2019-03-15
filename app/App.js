@@ -50,24 +50,36 @@ export default class App extends Component {
                     onRegionChangeComplete={ this.onRegionChangeComplete }
                     customMapStyle = { generatedMapStyle }
 	        />
-                <TouchableOpacity
-                    underlayColor='red'
-                    style={{ alignItems: 'center', padding: 2}} 
-                    onPress={this._getLocationAsync}                 
-                >
-                    <Image
-                        style={{ width: 50, height: 50}}
-                        source={require('./assets/location.png')}
-                    />
-                </TouchableOpacity>
+
+                <View style={{
+                          position: 'absolute',
+                          top: '70%',
+                          marginRight: '4%',
+                          alignSelf: 'flex-end',
+                }}>
+                    <TouchableOpacity onPress={this._getLocationAsync}
+                ><Image style={{height: 48, width: 50}} source={require('./assets/add.png')}/></TouchableOpacity>
+                </View>
+
+                <View style={{
+                          position: 'absolute',
+                          top: '80%',
+                          marginRight: '4%',
+                          alignSelf: 'flex-end',
+                }}>
+                    <TouchableOpacity onPress={this._getLocationAsync}
+                ><Image style={{height: 50, width: 50}} source={require('./assets/location.png')}/></TouchableOpacity>
+                </View>
+
 	    </View>
 
+              
 	);
     }
 } 
 
 let region = {latitude: 37.78825,
-	      longitude: -122.4324,
+	      longitude: -122.4324, 
 	      latitudeDelta: 0.0922,
 	      longitudeDelta: 0.0421};
 
