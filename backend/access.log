@@ -55,3 +55,8 @@ GET /data/adsf 200 req-body:  {} - 2.341 ms
 GET /data/peter  req-body:  {"name":"john"} -  ms
 GET /data/ 200 req-body:  {"name":"john"} - 34.025 ms
 GET /data/1 200 req-body:  {"name":"john"} - 5.042 ms
+GET /descriptionAPI.html 200 req-body:  {} - 71.037 ms
+GET /favicon.ico 404 req-body:  {} - 3.867 ms
+GET /descriptionAPI.html 304 req-body:  {} - 4.979 ms
+GET /event 404 req-body:  {"name":"john"} - 3.090 ms
+GET /event 404 req-body:  {} - 8.857 ms

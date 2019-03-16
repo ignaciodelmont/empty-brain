@@ -3,7 +3,7 @@ const http = require('http');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const path = require('path');
-const hostname =  '192.168.1.8';
+const hostname =  '172.20.37.140';
 const port = normalizePort(process.env.PORT || '3000');
 const express = require('express');
 const app = express();
@@ -11,9 +11,10 @@ const {ObjectID} = require('mongodb');
 const {mongoose} = require('./db/mongoose');
 
 /*
-*  Import Schema Example
+* Routers
 * */
-const Data = require('./models/data');
+const eventRouter = require('./routes/eventsRouter');
+app.use('/events',eventRouter);
 
 // For Development
 const debug = require('debug')('server:server');
@@ -54,9 +55,9 @@ app.use('/',express.static(path.join(__dirname, 'public'), [options]));
 
 /*
  *Dummy response
- **/
+
 app.get('/data',(req,res)=>{
-    Data.find({}).then((data)=>{
+    Event.find({}).then((data)=>{
         res.json(data);
     }).catch((err)=>{
         console.log(err);
@@ -64,7 +65,7 @@ app.get('/data',(req,res)=>{
 });
 app.get('/data/:name',(req,res)=>{
     let reqName = req.params.name;
-    Data.find({"name":{$lte:reqName}}).then((data)=>{
+    Event.find({"name":{$lte:reqName}}).then((data)=>{
         if (data.length>0)
             res.json(data);
         else
@@ -74,7 +75,7 @@ app.get('/data/:name',(req,res)=>{
     });
 });
 app.post('/reg',(req,res)=>{
-    let newData = new Data({
+    let newData = new Event({
         name: req.body.name,
         lastName : req.body.lastName
     });
@@ -86,7 +87,7 @@ app.post('/reg',(req,res)=>{
         res.send("Please complete the data");
     });
 });
-
+*/
 /**
  Create HTTP server.
  */
