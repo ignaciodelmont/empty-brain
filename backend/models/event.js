@@ -1,10 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-/*
-* Ejemplo de Schema
-* */
-const dataSchema = new Schema({
+
+const eventSchema = new Schema({
     name:{
         type:String,
         required:true
@@ -15,6 +13,6 @@ const dataSchema = new Schema({
     }
 });
 
-let Data = mongoose.model('Data',dataSchema);
+let Event = mongoose.model('Event',eventSchema);
 
-module.exports = Data;
+module.exports = Event;
