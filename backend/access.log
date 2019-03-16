@@ -1,0 +1,57 @@
+GET / 304 req-body:  {} - 5.691 ms
+GET /favicon.ico 404 req-body:  {} - 1.753 ms
+GET /descripcionAPI.html 404 req-body:  {} - 0.526 ms
+GET /descriptionAPI.html 200 req-body:  {} - 4.692 ms
+GET /public/descriptionAPI.html 404 req-body:  {} - 4.311 ms
+GET /favicon.ico 404 req-body:  {} - 1.416 ms
+GET /public/descriptionAPI.html 404 req-body:  {} - 1.513 ms
+GET /descriptionAPI.html 200 req-body:  {} - 6.486 ms
+GET / 200 req-body:  {} - 5.145 ms
+POST / 200 req-body:  {"data":"123"} - 5.901 ms
+POST / 200 req-body:  {"data":"123"} - 1.184 ms
+POST /reg  req-body:  {"chofer":"jose","linea":"de merca","gente":"buena"} -  ms
+GET /data 500 req-body:  {} - 7.190 ms
+GET /data 500 req-body:  {} - 7.851 ms
+GET /data 200 req-body:  {} - 28.442 ms
+GET /data 200 req-body:  {} - 31.886 ms
+GET /reg 404 req-body:  {"name":"john","lastName":"doe"} - 1.764 ms
+POST /reg 200 req-body:  {"name":"john","lastName":"doe"} - 412.014 ms
+POST /reg  req-body:  {"name":"john"} -  ms
+POST /reg 404 req-body:  {"name":"john"} - 27.228 ms
+POST /data 404 req-body:  {"name":"john"} - 0.994 ms
+GET /data 200 req-body:  {"name":"john"} - 27.102 ms
+POST /reg 200 req-body:  {"name":"john","lastName":"peter"} - 9.810 ms
+GET /data 200 req-body:  {"name":"john"} - 2.429 ms
+POST /reg 404 req-body:  {"chofer":"jose","linea":"de merca","gente":"buena"} - 3.253 ms
+POST /reg 200 req-body:  {"name":"john","lastName":"doe"} - 3.104 ms
+POST /data 404 req-body:  {"name":"john","lastName":"doe"} - 0.591 ms
+GET /data 200 req-body:  {"data":"123"} - 2.013 ms
+GET /data/john 200 req-body:  {"name":"john"} - 24.182 ms
+POST /reg 200 req-body:  {"name":"martin","lastName":"peter"} - 10.214 ms
+GET /data 200 req-body:  {"name":"john"} - 3.820 ms
+GET /data/martin 200 req-body:  {"name":"john"} - 2.098 ms
+GET /data/john 200 req-body:  {"name":"john"} - 2.391 ms
+GET /data/peter 200 req-body:  {"name":"john"} - 1.463 ms
+GET /data/john 200 req-body:  {"data":"123"} - 3.809 ms
+GET /data/adolf 200 req-body:  {"data":"123"} - 2.707 ms
+GET /data/adolf 200 req-body:  {} - 3.712 ms
+GET /data 200 req-body:  {} - 4.345 ms
+GET /data/john 200 req-body:  {} - 13.952 ms
+GET /data/z 200 req-body:  {} - 18.542 ms
+GET /data/l 200 req-body:  {} - 2.900 ms
+GET /data/martin 200 req-body:  {} - 4.357 ms
+GET /data/martiz 200 req-body:  {} - 3.425 ms
+GET /data/martin 200 req-body:  {} - 22.720 ms
+GET /data/ 200 req-body:  {} - 5.131 ms
+GET /data/jhgjh 200 req-body:  {} - 3.141 ms
+GET /data/jwgjh 200 req-body:  {} - 4.897 ms
+GET /data/ 200 req-body:  {} - 2.724 ms
+GET /data/ 200 req-body:  {} - 6.754 ms
+GET /data/ 200 req-body:  {} - 22.113 ms
+GET /data/ 200 req-body:  {} - 5.869 ms
+GET /data/a 200 req-body:  {} - 4.370 ms
+GET /data/a 200 req-body:  {} - 2.198 ms
+GET /data/adsf 200 req-body:  {} - 2.341 ms
+GET /data/peter  req-body:  {"name":"john"} -  ms
+GET /data/ 200 req-body:  {"name":"john"} - 34.025 ms
+GET /data/1 200 req-body:  {"name":"john"} - 5.042 ms
