@@ -1,14 +1,12 @@
 /* Server.js */
 const http = require('http');
 const fs = require('fs');
-const bodyParser = require('body-parser');
 const path = require('path');
 const hostname =  '172.20.37.140';
 const port = normalizePort(process.env.PORT || '3000');
 const express = require('express');
 const app = express();
-const {ObjectID} = require('mongodb');
-const {mongoose} = require('./db/mongoose');
+
 
 /*
 * Routers
@@ -24,11 +22,6 @@ const morgan = require('morgan');
   Set port
 */
 app.set('port', port);
-
-/*
-  Parse body data from JSON
- **/
-app.use(bodyParser.json());
 
 /*
   Set the log file for developing
@@ -53,41 +46,6 @@ let options = {
  */
 app.use('/',express.static(path.join(__dirname, 'public'), [options]));
 
-/*
- *Dummy response
-
-app.get('/data',(req,res)=>{
-    Event.find({}).then((data)=>{
-        res.json(data);
-    }).catch((err)=>{
-        console.log(err);
-    });
-});
-app.get('/data/:name',(req,res)=>{
-    let reqName = req.params.name;
-    Event.find({"name":{$lte:reqName}}).then((data)=>{
-        if (data.length>0)
-            res.json(data);
-        else
-            res.send("No results");
-    }).catch((err)=>{
-        console.log(err);
-    });
-});
-app.post('/reg',(req,res)=>{
-    let newData = new Event({
-        name: req.body.name,
-        lastName : req.body.lastName
-    });
-    newData.save().then((data)=>{
-        res.json(data);
-    }).catch((err)=>{
-        console.log(err);
-        res.statusCode = 404;
-        res.send("Please complete the data");
-    });
-});
-*/
 /**
  Create HTTP server.
  */
