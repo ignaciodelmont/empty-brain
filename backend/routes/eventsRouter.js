@@ -13,48 +13,46 @@ eventsRouter.route('/')
         next();
     })
     .get((req,res,next) => {
-        if (!req.body.showLimit)
-            req.body.showLimit = 10;
-        let showLimit = req.body.showLimit;
+        let newReq = req.body;
+        if (!newReq.location || !newReq.location.lat || !newReq.location.long || !newReq.radius) {
+            res.send("Not all required parameters were sent");
+            return;
+        }
+        if (!newReq.showLimit)
+            newReq.showLimit = 10;
         Event.find({
-            //state: "Open"
+            state:"open"
         }).sort({
            importance: -1  // -1 means descending order
         }).then((events) => {
             let inLimitEvents = [];
             for(let i = 0; i < events.length; i++){
-                if(events[i].isNear([parseFloat(req.body.location.lat),parseFloat(req.body.location.long)],parseFloat(req.body.radius))) {
+                if(events[i].isNear([parseFloat(newReq.location.lat),parseFloat(newReq.location.long)],parseFloat(newReq.radius))) {
                     events[i].generateState();
                     inLimitEvents = inLimitEvents.concat(events[i]);
                 }
             }
-            //console.log(inLimitEvents.slice(0, showLimit));
-            res.send(inLimitEvents.slice(0, showLimit));
+            res.send(inLimitEvents.slice(0, newReq.showLimit));
         }).catch((err) => {
             console.log(err);
-            res.send(err);
+            res.send("Catched in get/events: " + err.toString());
         });
 
     })
     .post((req,res,next) => {
-        if (req.body.img)
-            req.body.img = `pictures/${req.body.img}`;
-
-        if (req.body.endTime) { 
-            req.body.endTime = new Date(req.body.endTime);
-        } else {
-            req.body.endTime = new Date(req.body.startTime);
-            req.body.endTime = req.body.endTime.setHours(req.body.endTime.getHours() + 1)
-        }
+        let newReq = req.body;
+        if (newReq.img)
+            newReq.img = `pictures/${newReq.img}`;
 
         let newEvent = new Event({
-                title: req.body.title,
-                description: req.body.description,
-                incident: req.body.incident,    // Boolean, incident? yes or no?
-                startTime: new Date(req.body.startTime),
-                endTime: req.body.endTime,
-                location: [parseFloat(req.body.location.lat), parseFloat(req.body.location.long)],
-                img: req.body.img
+                title: newReq.title,
+                description: newReq.description,
+                incident: newReq.incident,    
+                startTime:newReq.startTime,
+                endTime: newReq.endTime,
+                location: [parseFloat(newReq.location.lat), parseFloat(newReq.location.long)],
+                img: newReq.img,
+                creatorContact: newReq.creatorContact
         });
         newEvent.generateState();
         newEvent.save()
@@ -69,17 +67,41 @@ eventsRouter.route('/')
             });
     })
     .patch((req,res,next) => {
-/*
-        Event.find({
-            _id: req.body,
-            creatorID: req.body.creatorID
-        }).then((event) => {
-
+        let newReq = req.body;
+        Event.findById(newReq.id)
+        .then((event) => {
+            if (event.participants.includes(newReq.name)) {
+                console.log("Participant " + newReq.name + " is already in list!");
+                res.send("Participant " + newReq.name + " is already in list!");
+                return;
+            }
+            let newParticipantList = event.participants.concat(newReq.name);
+            Event.findByIdAndUpdate(newReq.id,{
+                $set:{
+                    participants:newParticipantList
+                }
+            })
+            .then((event2)=>{
+                console.log("Participant " + newReq.name + " was added!");
+                res.send("Participant " + newReq.name + " was added!");
+            })
+            .catch((err2)=>{
+                res.send(err2);
+            });
+        }).catch((err)=>{
+            res.send(err);
         });
-*/
-    })
-    .delete((req,res,next) => {
-
+        
     });
 
+eventsRouter.route('/:name')
+    .get((req,res,next)=>{
+        let queryName = req.params.name;
+        Event.find({title:{ $regex: (new RegExp(queryName, "i")), $options: 'i'}})
+            .then((events)=>{
+                res.send(events);
+            }).catch((err)=>{
+                res.send(err);
+            });
+    });
 module.exports = eventsRouter;

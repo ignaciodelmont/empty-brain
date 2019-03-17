@@ -16,15 +16,16 @@ const eventSchema = new Schema({
         default:"Open"
     },
     incident:{
-        type:Boolean,
+        type:Boolean, // Boolean, incident? yes or no?
         required:true
     },
     startTime:{
-        type:Date,
+        type:String,
         required:true
     },
     endTime:{ // estimated
-        type:Date
+        type:String,
+        required: true
     },
     location:{
         type:[Number],
@@ -40,15 +41,19 @@ const eventSchema = new Schema({
     },
     img:{
         type:String,
-        required:false 
+        required:false,
+        default: "pictures/defaultEvent.jpg" 
     },
     participants:{
-        type:[String]
+        type:[String],
+        default:[]
     }
     
 });
 
-
+/*
+*  Calculate distance between points on earth
+*/
 function deg2rad(deg) { return deg * (Math.PI/180); }
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
     let R = 6371; // Radius of the earth in km
@@ -62,24 +67,29 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
     let d = R * c; // Distance in km
     return d;
 }
-
+/**
+ * Determine if is near on a radius
+ */
 eventSchema.methods.isNear = function (center, radius) {
     let dist = getDistanceFromLatLonInKm(this.location[0], this.location[1], center[0], center[1]);
-    console.log(dist);
     return dist <= parseFloat(radius);
 }
 
+/**
+ * Generate the event state
+ */
 eventSchema.methods.generateState = function () {
     if (this.incident)
         this.state = "Incident";
     else if (this.state != "Suspended" && this.state != "Delayed" && this.state != "Full") {
-        let current = new Date();
-        current = current.getTime();
-        if (this.endTime && current >= this.endTime.getTime())
+        let current = new Date().getTime();
+        let startTime = new Date(this.startTime).getTime();
+        let endTime = new Date(this.endTime).getTime();
+        if (this.endTime && current >= endTime)
             this.state = "Over";
-        else if (current >= this.startTime.getTime())
+        else if (current >= startTime)
             this.state = "Started";
-        else if (current < (this.startTime.getTime() - 60*5))
+        else if ((startTime - current) <= 60*5)
             this.state = "About to start";
         else
             this.state = "Open";

@@ -2,17 +2,23 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const hostname =  '172.20.37.140';
+const hostname =  '192.168.0.101';
 const port = normalizePort(process.env.PORT || '3000');
 const express = require('express');
 const app = express();
 
+const Event = require('./models/event');
 
 /*
 * Routers
 * */
 const eventRouter = require('./routes/eventsRouter');
-app.use('/events',eventRouter);
+app.use('/events', eventRouter);
+app.get('/', (req, res) => {
+    Event.find({}).limit(20).then((events) => {
+        res.send(events);
+    });
+});
 
 // For Development
 const debug = require('debug')('server:server');
