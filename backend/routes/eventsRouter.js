@@ -34,7 +34,7 @@ eventsRouter.route('/')
         newEvent.generateState();
         newEvent.save()
             .then((event) => {
-                console.log(event);
+               
                 res.send(event);
             })
             .catch((err) => {
@@ -49,7 +49,7 @@ eventsRouter.route('/')
         .then((event) => {
             if (event.participants.includes(newReq.name)) {
                 res.statusCode = 409;
-                console.log("Participant " + newReq.name + " is already in list!");
+                
                 res.send("Participant " + newReq.name + " is already in list!");
                 return;
             }
@@ -60,7 +60,7 @@ eventsRouter.route('/')
                 }
             })
             .then((event2)=>{
-                console.log("Participant " + newReq.name + " was added!");
+                
                 res.send("Participant " + newReq.name + " was added!");
             })
             .catch((err2)=>{
@@ -99,18 +99,18 @@ eventsRouter.route('/:radius/:lat/:long')
             res.send("Not all required parameters were sent");
             return;
         }
-        let showLimit = 10;
+        let showLimit = 1000;
         Event.find({
             $or: [ { state:"Open" }, { state:"About to start" } ] 
         }).limit(200).sort({
            importance: -1  // -1 means descending order
         }).then((events) => {
-            console.log(events);
             let inLimitEvents = [];
             for(let i = 0; i < events.length; i++){
                 if(events[i].isNear([parseFloat(lat),parseFloat(long)],parseFloat(radius))) {
                     events[i].generateState();
-                    inLimitEvents = inLimitEvents.concat(events[i]);
+                    if (events[i].state == "Open" || events[i].state == "About to start")
+                        inLimitEvents = inLimitEvents.concat(events[i]);
                 }
             }
             res.json(inLimitEvents.slice(0, showLimit));

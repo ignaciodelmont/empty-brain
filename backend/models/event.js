@@ -81,13 +81,10 @@ eventSchema.methods.isNear = function (center, radius) {
 eventSchema.methods.generateState = function () {
     if (this.incident)
         this.state = "Incident";
-    else if (this.state != "Suspended" && this.state != "Delayed" && this.state != "Full") {
+    else if (this.state != "Suspended" && this.state != "Delayed" && this.state != "Full" && this.state != "Over") {
         let current = new Date().getTime();
         let startTime = new Date(this.startTime).getTime();
         let endTime = new Date(this.endTime).getTime();
-        console.log(startTime);
-        console.log(current);
-        console.log(startTime - current);
         if (current >= endTime)
             this.state = "Over";
         else if ((current >= startTime) && (current < endTime))
