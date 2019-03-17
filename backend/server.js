@@ -16,6 +16,7 @@ const eventRouter = require('./routes/eventsRouter');
 app.use('/events', eventRouter);
 app.get('/', (req, res) => {
     Event.find({}).limit(20).then((events) => {
+        res.statusCode = 418; 
         res.send(events);
     });
 });

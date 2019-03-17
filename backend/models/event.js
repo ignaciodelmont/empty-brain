@@ -85,11 +85,14 @@ eventSchema.methods.generateState = function () {
         let current = new Date().getTime();
         let startTime = new Date(this.startTime).getTime();
         let endTime = new Date(this.endTime).getTime();
-        if (this.endTime && current >= endTime)
+        console.log(startTime);
+        console.log(current);
+        console.log(startTime - current);
+        if (current >= endTime)
             this.state = "Over";
-        else if (current >= startTime)
+        else if ((current >= startTime) && (current < endTime))
             this.state = "Started";
-        else if ((startTime - current) <= 60*5)
+        else if ((startTime - current) <= 300000)
             this.state = "About to start";
         else
             this.state = "Open";

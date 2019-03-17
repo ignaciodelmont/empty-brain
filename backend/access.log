@@ -81,3 +81,9 @@ GET /favicon.ico 404 req-body:   - 0.844 ms
 GET /descriptionAPI.html 200 req-body:   - 1.657 ms
 GET /pictures/defaultEvent.jpg 200 req-body:   - 3.545 ms
 GET /descriptionAPI.html 304 req-body:   - 9.189 ms
+GET /pictures/defaultEvent 404 req-body:   - 8.865 ms
+GET /events?radius=5&lat=13&long=45 404 req-body:  {} - 5.076 ms
+GET /events?radius=5&lat=13&long=45 404 req-body:  {} - 1.524 ms
+GET /radius=5/lat=13/long=45 404 req-body:   - 4.254 ms
+GET /5/13/45 404 req-body:   - 1.674 ms
+GET /events/ 404 req-body:  {} - 1.864 ms

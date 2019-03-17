@@ -4,40 +4,17 @@ const bodyParser = require('body-parser');
 const {mongoose} = require('../db/mongoose');
 let eventsRouter = express.Router();
 
-
+/**
+ * Use body-parser
+ */
 eventsRouter.use(bodyParser.json());
-
+/**
+ * Methods for /events
+ */
 eventsRouter.route('/')
     .all((req,res,next) => {
         res.statusCode = 200;
         next();
-    })
-    .get((req,res,next) => {
-        let newReq = req.body;
-        if (!newReq.location || !newReq.location.lat || !newReq.location.long || !newReq.radius) {
-            res.send("Not all required parameters were sent");
-            return;
-        }
-        if (!newReq.showLimit)
-            newReq.showLimit = 10;
-        Event.find({
-            state:"open"
-        }).sort({
-           importance: -1  // -1 means descending order
-        }).then((events) => {
-            let inLimitEvents = [];
-            for(let i = 0; i < events.length; i++){
-                if(events[i].isNear([parseFloat(newReq.location.lat),parseFloat(newReq.location.long)],parseFloat(newReq.radius))) {
-                    events[i].generateState();
-                    inLimitEvents = inLimitEvents.concat(events[i]);
-                }
-            }
-            res.send(inLimitEvents.slice(0, newReq.showLimit));
-        }).catch((err) => {
-            console.log(err);
-            res.send("Catched in get/events: " + err.toString());
-        });
-
     })
     .post((req,res,next) => {
         let newReq = req.body;
@@ -71,6 +48,7 @@ eventsRouter.route('/')
         Event.findById(newReq.id)
         .then((event) => {
             if (event.participants.includes(newReq.name)) {
+                res.statusCode = 409;
                 console.log("Participant " + newReq.name + " is already in list!");
                 res.send("Participant " + newReq.name + " is already in list!");
                 return;
@@ -86,22 +64,61 @@ eventsRouter.route('/')
                 res.send("Participant " + newReq.name + " was added!");
             })
             .catch((err2)=>{
+                res.statusCode = 500;
                 res.send(err2);
             });
         }).catch((err)=>{
+            res.statusCode = 400;
             res.send(err);
         });
         
     });
 
+/**
+ * Methods for /events/:name
+ */
 eventsRouter.route('/:name')
     .get((req,res,next)=>{
         let queryName = req.params.name;
         Event.find({title:{ $regex: (new RegExp(queryName, "i")), $options: 'i'}})
             .then((events)=>{
-                res.send(events);
+                res.statusCode = 200;
+                res.json(events);
             }).catch((err)=>{
+                res.statusCode = 404;
                 res.send(err);
             });
     });
+
+eventsRouter.route('/:radius/:lat/:long')
+    .get((req,res,next)=>{
+        let radius = req.params.radius;
+        let lat = req.params.lat;
+        let long = req.params.long;
+        if (  !lat || !long || !radius) {
+            res.send("Not all required parameters were sent");
+            return;
+        }
+        let showLimit = 10;
+        Event.find({
+            $or: [ { state:"Open" }, { state:"About to start" } ] 
+        }).limit(200).sort({
+           importance: -1  // -1 means descending order
+        }).then((events) => {
+            console.log(events);
+            let inLimitEvents = [];
+            for(let i = 0; i < events.length; i++){
+                if(events[i].isNear([parseFloat(lat),parseFloat(long)],parseFloat(radius))) {
+                    events[i].generateState();
+                    inLimitEvents = inLimitEvents.concat(events[i]);
+                }
+            }
+            res.json(inLimitEvents.slice(0, showLimit));
+        }).catch((err) => {
+            res.statusCode = 500;
+            console.log(err);
+            res.send(err);
+        });
+    });
+
 module.exports = eventsRouter;
