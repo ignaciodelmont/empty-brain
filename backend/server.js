@@ -2,7 +2,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const hostname =  '192.168.0.101';
+const hostname =  '192.168.0.103';
 const port = normalizePort(process.env.PORT || '3000');
 const express = require('express');
 const app = express();
@@ -16,7 +16,7 @@ const eventRouter = require('./routes/eventsRouter');
 app.use('/events', eventRouter);
 app.get('/', (req, res) => {
     Event.find({}).limit(20).then((events) => {
-        res.statusCode = 418; 
+        res.statusCode = 418;
         res.send(events);
     });
 });

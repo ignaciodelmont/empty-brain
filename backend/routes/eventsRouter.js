@@ -34,7 +34,7 @@ eventsRouter.route('/')
         newEvent.generateState();
         newEvent.save()
             .then((event) => {
-               
+                console.log(event);
                 res.send(event);
             })
             .catch((err) => {
@@ -60,7 +60,7 @@ eventsRouter.route('/')
                 }
             })
             .then((event2)=>{
-                
+                console.log("added OK");
                 res.send("Participant " + newReq.name + " was added!");
             })
             .catch((err2)=>{

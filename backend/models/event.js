@@ -51,6 +51,9 @@ const eventSchema = new Schema({
     
 });
 
+eventSchema.index({location:'2dsphere'});
+
+
 /*
 *  Calculate distance between points on earth
 */
