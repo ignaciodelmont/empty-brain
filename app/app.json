@@ -29,7 +29,7 @@
       "package": "com.link.android",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDCvIRbsGih3UqVMv8KPiYR6_d1crSMy4I"
+          "apiKey": "Put your API key here"
         }
       }
     },
